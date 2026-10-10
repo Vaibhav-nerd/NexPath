@@ -3,8 +3,6 @@ import ReactFlow, {
   Background,
   Controls,
   MiniMap,
-  useEdgesState,
-  useNodesState,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { NodeCard } from './NodeCard'
@@ -23,6 +21,28 @@ export function RoadmapGraph({
 }) {
   const containerRef = useRef(null)
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
+  const [rfInstance, setRfInstance] = useState(null)
+  const [hasEntered, setHasEntered] = useState(false)
+
+  // Entrance plays once per new roadmap (max 400ms)
+  useEffect(() => {
+    setHasEntered(false)
+    const timer = setTimeout(() => setHasEntered(true), 450)
+    return () => clearTimeout(timer)
+  }, [initialNodes])
+
+  // 10. Smooth camera zoom to selected node (duration 350ms <= 400ms)
+  useEffect(() => {
+    if (!selectedNodeId || !rfInstance) return
+    const targetNode = initialNodes.find((n) => n.id === selectedNodeId)
+    if (targetNode && targetNode.position) {
+      rfInstance.setCenter(
+        targetNode.position.x + 100, // half of 200px width
+        targetNode.position.y + 36,  // half of 72px height
+        { zoom: 1.05, duration: 350 }
+      )
+    }
+  }, [selectedNodeId, initialNodes, rfInstance])
 
   // Cursor spotlight updated via requestAnimationFrame directly on DOM style
   useEffect(() => {
@@ -63,13 +83,15 @@ export function RoadmapGraph({
       data: {
         ...node.data,
         isDone: completedNodeIds.has(node.id),
+        animEnter: !hasEntered,
       },
     }))
-  }, [initialNodes, selectedNodeId, completedNodeIds])
+  }, [initialNodes, selectedNodeId, completedNodeIds, hasEntered])
 
   // Active node for edge highlighting is either hovered or selected
   const activeNodeId = hoveredNodeId || selectedNodeId
 
+  // 6. Edge flow on active path only; others dimmed to 40%
   const edges = useMemo(() => {
     return initialEdges.map((edge) => {
       const isConnected =
@@ -92,6 +114,7 @@ export function RoadmapGraph({
 
       return {
         ...edge,
+        className: isConnected ? 'edge-flow' : '',
         style: {
           ...edge.style,
           stroke: strokeColor,
@@ -128,6 +151,7 @@ export function RoadmapGraph({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        onInit={setRfInstance}
         onNodeClick={handleNodeClick}
         onPaneClick={onPaneClick}
         onNodeMouseEnter={handleNodeMouseEnter}
@@ -146,7 +170,7 @@ export function RoadmapGraph({
         <MiniMap
           nodeStrokeColor="var(--line)"
           nodeColor="var(--surface)"
-          maskColor="rgba(246, 247, 249, 0.7)"
+          maskColor="rgba(10, 14, 23, 0.75)"
           style={{ bottom: 16, left: 72 }}
         />
       </ReactFlow>

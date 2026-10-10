@@ -100,7 +100,7 @@ Restyle NodeCard and edges using tokens. Keep kind encoding (solid / left bar / 
 
 Implement effects 1–4 in effects.css plus the rAF spotlight. Done when: 0 React renders on mouse move (verify in React DevTools Profiler), ≥ 55 fps.
 
-4. Motion layer — todo
+4. Motion layer — done
 
 Implement effects 5–8 and 10. Done when: entrance plays once per roadmap, hover and complete do not trigger layout, ≥ 55 fps.
 

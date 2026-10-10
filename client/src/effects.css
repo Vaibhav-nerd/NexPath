@@ -1,4 +1,4 @@
-/* effects.css — Futuristic Lighting & Depth Layer */
+/* effects.css — Futuristic Lighting, Depth & Motion Layer */
 
 /* 1. Cursor Spotlight & Static Dot Grid with Soft Vignette (Depth) */
 .graph-container {
@@ -35,11 +35,20 @@
   }
 }
 
-/* 2. Selected-node Glow via ::after Pseudo-element (Fade Opacity Only) */
+/* Base Node Motion & Pseudo-elements */
 .custom-node {
   position: relative;
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
 }
 
+/* 7. Hover Scale (1.03, 120ms) */
+.custom-node:hover {
+  transform: scale(1.03);
+  z-index: 5;
+}
+
+/* 2. Selected-node Glow via ::after Pseudo-element (Fade Opacity Only) */
 .custom-node::after {
   content: '';
   position: absolute;
@@ -72,5 +81,63 @@
   }
   50% {
     opacity: 0.85;
+  }
+}
+
+/* 5. Entrance: Staggered Slide/Fade by Phase (Max 400ms Total) */
+@keyframes nodeEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.custom-node.anim-enter {
+  animation: nodeEntrance 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc((var(--phase, 1) - 1) * 35ms);
+}
+
+/* 6. Edge Flow: Animated Stroke-dashoffset on Selected Path Edges */
+@keyframes edgeFlow {
+  from {
+    stroke-dashoffset: 20;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.react-flow__edge.edge-flow path {
+  stroke-dasharray: 6 4 !important;
+  animation: edgeFlow 0.85s linear infinite;
+}
+
+/* 8. Step Complete: One-time Pulse Ring (Transform + Opacity, 400ms) */
+.custom-node::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-node) + 2px);
+  border: 2px solid var(--done);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.custom-node.pulse-complete::before {
+  animation: completePulse 400ms ease-out forwards;
+}
+
+@keyframes completePulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.14);
+    opacity: 0;
   }
 }

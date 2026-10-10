@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Handle, Position } from 'reactflow'
 
 const CheckIcon = () => (
@@ -13,18 +13,33 @@ const CheckIcon = () => (
 )
 
 function NodeCardComponent({ id, data, selected }) {
-  const { title, kind, duration, isDone } = data
+  const { title, kind, duration, isDone, phase, animEnter } = data
+  const [pulse, setPulse] = useState(false)
+  const prevDoneRef = useRef(isDone)
+
+  // One-time 400ms pulse ring when transitioning to complete
+  useEffect(() => {
+    if (!prevDoneRef.current && isDone) {
+      setPulse(true)
+      const timer = setTimeout(() => setPulse(false), 400)
+      return () => clearTimeout(timer)
+    }
+    prevDoneRef.current = isDone
+  }, [isDone])
 
   const kindClass = `kind-${kind || 'skill'}`
   const doneClass = isDone ? 'is-done' : ''
   const selectedClass = selected ? 'selected' : ''
+  const enterClass = animEnter ? 'anim-enter' : ''
+  const pulseClass = pulse ? 'pulse-complete' : ''
 
   return (
     <div
       role="button"
       tabIndex={0}
       aria-label={`${title}, ${duration}, ${isDone ? 'completed' : 'not completed'}`}
-      className={`custom-node ${kindClass} ${doneClass} ${selectedClass}`}
+      className={`custom-node ${kindClass} ${doneClass} ${selectedClass} ${enterClass} ${pulseClass}`}
+      style={{ '--phase': phase || 1 }}
     >
       <Handle
         type="target"
