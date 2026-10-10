@@ -104,7 +104,7 @@ Implement effects 1–4 in effects.css plus the rAF spotlight. Done when: 0 Reac
 
 Implement effects 5–8 and 10. Done when: entrance plays once per roadmap, hover and complete do not trigger layout, ≥ 55 fps.
 
-5. Side panel and query bar — todo
+5. Side panel and query bar — done
 
 Glass panel with slide-in (effect 9); restyle query bar with focus glow (pseudo-element). Done when: panel animation smooth at 375px, 768px, 1440px; Esc closes it.
 
