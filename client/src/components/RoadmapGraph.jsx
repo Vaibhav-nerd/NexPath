@@ -54,7 +54,7 @@ export function RoadmapGraph({
           strokeWidth = 2
           opacity = 1
         } else {
-          opacity = 0.35
+          opacity = 0.4
         }
       }
 

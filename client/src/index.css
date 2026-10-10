@@ -238,17 +238,32 @@ body {
 }
 
 .custom-node.kind-cert {
-  border: 1px dashed var(--line);
+  border: 1.5px dashed rgba(255, 255, 255, 0.25);
 }
 
 .custom-node.kind-milestone {
-  background-color: var(--ink);
-  color: #FFFFFF;
-  border: 1px solid var(--ink);
+  background-color: var(--surface);
+  border: 2px solid var(--accent-2);
+  color: var(--ink);
 }
 
 .custom-node.kind-milestone .node-duration {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: light) {
+  .custom-node.kind-cert {
+    border: 1.5px dashed var(--muted);
+  }
+  .custom-node.kind-milestone {
+    background-color: var(--ink);
+    border: 2px solid var(--ink);
+    color: #FFFFFF;
+  }
+  .custom-node.kind-milestone .node-duration {
+    color: rgba(255, 255, 255, 0.7);
+  }
 }
 
 .node-header {

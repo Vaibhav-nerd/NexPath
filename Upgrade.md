@@ -92,7 +92,7 @@ After each task: run the verification in §9, show evidence, update the task to 
 
 Create theme.css with §4 tokens; apply to background, surface, text, borders. No component logic changes. Done when: app renders in the new theme, contrast verified, graph and panel unchanged in behavior.
 
-2. Node and edge styling — todo
+2. Node and edge styling — done
 
 Restyle NodeCard and edges using tokens. Keep kind encoding (solid / left bar / dashed / filled goal) and 200×72 size. Done when: all four kinds are distinguishable without color alone; layout positions unchanged.
 
