@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import sampleFixture from './fixtures/sample.json'
 import { getLayoutedGraph } from './layout'
 import { QueryBar } from './components/QueryBar'
@@ -6,6 +6,7 @@ import { RoadmapGraph } from './components/RoadmapGraph'
 import { SidePanel } from './components/SidePanel'
 import { ProgressBar } from './components/ProgressBar'
 import { ListView } from './components/ListView'
+import { expandNode, generateRoadmap } from './api'
 
 const EXAMPLE_GOALS = [
   'Machine Learning Engineer',
@@ -25,6 +26,8 @@ export default function App() {
   const [isCached, setIsCached] = useState(false)
   const [lastSubmittedGoal, setLastSubmittedGoal] = useState('')
   const [lastSubmittedLevel, setLastSubmittedLevel] = useState('beginner')
+
+  const abortControllerRef = useRef(null)
 
   // Load from sessionStorage or fixture on mount
   useEffect(() => {
@@ -101,8 +104,15 @@ export default function App() {
     return layouted.nodes.find((n) => n.id === selectedNodeId) || null
   }, [selectedNodeId, layouted.nodes])
 
-  // Generate roadmap handler
+  // Generate roadmap handler with AbortController
   const handleGenerate = async (goal, level) => {
+    // Abort previous in-flight request if user submits again
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
     setLastSubmittedGoal(goal)
     setLastSubmittedLevel(level)
     setStatus('loading')
@@ -120,32 +130,12 @@ export default function App() {
           'career_roadmap_active',
           JSON.stringify({ roadmap: sampleFixture, cached: true })
         )
-      }, 600)
+      }, 500)
       return
     }
 
     try {
-      const response = await fetch('/api/roadmap', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ goal, level }),
-      })
-
-      if (response.status === 429) {
-        setStatus('limit')
-        return
-      }
-
-      if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}))
-        setErrorMessage(
-          errJson.error || 'The roadmap could not be generated. Try again in a moment.'
-        )
-        setStatus('error')
-        return
-      }
-
-      const data = await response.json()
+      const data = await generateRoadmap(goal, level, controller.signal)
       setActiveRoadmap(data)
       setIsCached(!!data.cached)
       setStatus('success')
@@ -154,8 +144,21 @@ export default function App() {
         JSON.stringify({ roadmap: data, cached: !!data.cached })
       )
     } catch (err) {
-      setErrorMessage('The network connection failed. Try again in a moment.')
-      setStatus('error')
+      if (err.name === 'AbortError') {
+        return // Ignore intentional abort
+      }
+      if (err.status === 429) {
+        setStatus('limit')
+      } else {
+        setErrorMessage(
+          err.message || 'The roadmap could not be generated. Try again in a moment.'
+        )
+        setStatus('error')
+      }
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null
+      }
     }
   }
 
@@ -169,33 +172,22 @@ export default function App() {
     if (useFixture) {
       setTimeout(() => {
         const subTopics = [
-          { t: `${node.data.title} deep dive 1`, d: '3d', w: 'Advanced practical exercises.' },
-          { t: `${node.data.title} deep dive 2`, d: '4d', w: 'Production architectural patterns.' },
+          { t: `${node.data.title} Foundations`, d: '3d', w: 'Key underlying concepts.' },
+          { t: `${node.data.title} Practice`, d: '4d', w: 'Practical exercises.' },
         ]
         applyExpansion(nodeId, subTopics)
         setIsExpanding(false)
-      }, 500)
+      }, 400)
       return
     }
 
     try {
-      const response = await fetch('/api/roadmap/expand', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          goal: activeRoadmap.g,
-          nodeTitle: node.data.title,
-        }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        if (data.sub && Array.isArray(data.sub)) {
-          applyExpansion(nodeId, data.sub)
-        }
+      const data = await expandNode(activeRoadmap.g, node.data.title)
+      if (data && Array.isArray(data.sub)) {
+        applyExpansion(nodeId, data.sub)
       }
     } catch (e) {
-      // Quiet failure for optional sub-topics
+      // Quiet failure for sub-topics expansion
     } finally {
       setIsExpanding(false)
     }
