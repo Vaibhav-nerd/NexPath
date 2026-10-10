@@ -112,7 +112,7 @@ Glass panel with slide-in (effect 9); restyle query bar with focus glow (pseudo-
 
 Implement lite mode, document.hidden pause, reduced-motion, and the data-fx="off" switch (§6). Done when: each safeguard is demonstrated (screenshot or recorded note) with a 40-node mock.
 
-7. Final audit — todo
+7. Final audit — done
 
 Run the full checklist in §9 and the precision-rules.md §13 checklist. Report remaining risks.
 
