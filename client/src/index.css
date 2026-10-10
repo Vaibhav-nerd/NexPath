@@ -273,11 +273,13 @@ body {
   .custom-node.kind-cert {
     border: 1.5px dashed var(--muted);
   }
+
   .custom-node.kind-milestone {
     background-color: var(--ink);
     border: 2px solid var(--ink);
     color: #FFFFFF;
   }
+
   .custom-node.kind-milestone .node-duration {
     color: rgba(255, 255, 255, 0.7);
   }
@@ -325,6 +327,7 @@ body {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -607,14 +610,27 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes pulse {
-  0% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-  100% { opacity: 0.4; }
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -628,6 +644,7 @@ body {
   from {
     transform: translateY(100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -638,9 +655,11 @@ body {
   .query-bar {
     padding: 0 var(--s-3);
   }
+
   .query-form {
     gap: var(--s-2);
   }
+
   .side-panel {
     top: auto;
     bottom: 0;
@@ -652,6 +671,7 @@ body {
     border-radius: var(--radius-node) var(--radius-node) 0 0;
     animation: panelSlideUp 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
   .react-flow__minimap {
     display: none !important;
   }
