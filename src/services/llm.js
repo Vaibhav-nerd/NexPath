@@ -4,7 +4,7 @@ import { config } from '../config.js'
  * Dynamic mock roadmap generator tailored to the requested goal and level.
  * Ensures that even in offline/demo mode, each query gets personalized results.
  */
-function getMockRoadmapResponse(goal = 'Software Engineer', level = 'beginner') {
+export function getMockRoadmapResponse(goal = 'Software Engineer', level = 'beginner') {
   const cleanGoal = (goal || 'Software Engineer').trim()
   return JSON.stringify({
     g: cleanGoal,
@@ -86,7 +86,7 @@ function getMockRoadmapResponse(goal = 'Software Engineer', level = 'beginner') 
   })
 }
 
-function getMockExpandResponse(nodeTitle) {
+export function getMockExpandResponse(nodeTitle) {
   return JSON.stringify({
     sub: [
       { t: `${nodeTitle} Foundations`, d: '3d', w: 'Essential principles and setups.' },

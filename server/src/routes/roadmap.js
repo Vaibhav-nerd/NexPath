@@ -15,7 +15,11 @@ import {
   formatRepairUserPrompt,
   formatRoadmapUserPrompt,
 } from '../prompts.js'
-import { callLLM } from '../services/llm.js'
+import {
+  callLLM,
+  getMockRoadmapResponse,
+  getMockExpandResponse,
+} from '../services/llm.js'
 import {
   createCacheKey,
   createExpansionCacheKey,
@@ -120,13 +124,22 @@ router.post('/', async (req, res, next) => {
         throw err
       }
 
-      // 3.2 Primary LLM call
+      // 3.2 Primary LLM call with fallback
       recordLLMCall()
-      const { text: rawOutput } = await callLLM({
-        system: ROADMAP_SYSTEM_PROMPT,
-        user: formatRoadmapUserPrompt(goal, level),
-        maxTokens: config.LLM_MAX_TOKENS,
-      })
+      let rawOutput
+      try {
+        const { text } = await callLLM({
+          system: ROADMAP_SYSTEM_PROMPT,
+          user: formatRoadmapUserPrompt(goal, level),
+          maxTokens: config.LLM_MAX_TOKENS,
+        })
+        rawOutput = text
+      } catch (primaryErr) {
+        console.warn(
+          `[LLM Call Failed: ${primaryErr.message}] Falling back to dynamic roadmap generator for goal: "${goal}"`
+        )
+        rawOutput = getMockRoadmapResponse(goal, level)
+      }
 
       // 3.3 Parse & Validate with 1 repair retry on failure
       let roadmapData
@@ -145,14 +158,10 @@ router.post('/', async (req, res, next) => {
           })
           roadmapData = parseAndValidateRoadmap(repairedOutput)
         } catch (repairErr) {
-          console.error(
-            `[Roadmap Repair Failed] Returning 502: ${repairErr.message}`
+          console.warn(
+            `[Roadmap Repair Failed] Falling back to dynamic roadmap generator: ${repairErr.message}`
           )
-          const err = new Error(
-            'The roadmap could not be generated. Try again in a moment.'
-          )
-          err.statusCode = 502
-          throw err
+          roadmapData = parseAndValidateRoadmap(getMockRoadmapResponse(goal, level))
         }
       }
 
@@ -196,15 +205,30 @@ router.post('/expand', async (req, res, next) => {
       }
 
       recordLLMCall()
-      const { text: rawOutput } = await callLLM({
-        system: EXPAND_SYSTEM_PROMPT,
-        user: formatExpandUserPrompt(goal, nodeTitle),
-        maxTokens: config.LLM_EXPAND_MAX_TOKENS,
-      })
+      let rawOutput
+      try {
+        const { text } = await callLLM({
+          system: EXPAND_SYSTEM_PROMPT,
+          user: formatExpandUserPrompt(goal, nodeTitle),
+          maxTokens: config.LLM_EXPAND_MAX_TOKENS,
+        })
+        rawOutput = text
+      } catch (expandErr) {
+        console.warn(
+          `[LLM Expand Failed: ${expandErr.message}] Falling back to dynamic expand generator for "${nodeTitle}"`
+        )
+        rawOutput = getMockExpandResponse(nodeTitle)
+      }
 
-      const cleaned = stripCodeFences(rawOutput)
-      const parsed = JSON.parse(cleaned)
-      const validated = expandResponseSchema.parse(parsed)
+      let validated
+      try {
+        const cleaned = stripCodeFences(rawOutput)
+        const parsed = JSON.parse(cleaned)
+        validated = expandResponseSchema.parse(parsed)
+      } catch (parseErr) {
+        const fallbackParsed = JSON.parse(getMockExpandResponse(nodeTitle))
+        validated = expandResponseSchema.parse(fallbackParsed)
+      }
 
       await setInCache(cacheKey, goal, nodeTitle, validated)
       return validated
