@@ -54,14 +54,33 @@ function parseAndValidateRoadmap(rawText) {
       milestoneNodes = [json.n[json.n.length - 1]]
     }
 
-    if (milestoneNodes.length === 1) {
-      const milestoneNode = milestoneNodes[0]
-      const otherNodes = json.n.filter((n) => n !== milestoneNode)
-      const maxOtherPhase = Math.max(...otherNodes.map((n) => n.p || 1))
-      if (milestoneNode.p <= maxOtherPhase) {
-        milestoneNode.p = maxOtherPhase + 1
+    const goalNode = json.n.find((n) => n.k === 'milestone') || json.n[json.n.length - 1]
+
+    // 2. Auto-heal missing incoming edges for nodes in phase > 1
+    const incomingSet = new Set(json.e.map(([, to]) => to))
+    json.n.forEach((node) => {
+      if ((node.p || 1) > 1 && !incomingSet.has(node.i)) {
+        const prevNode =
+          json.n.find((cand) => (cand.p || 1) < (node.p || 1)) || json.n[0]
+        if (prevNode && prevNode.i !== node.i) {
+          json.e.push([prevNode.i, node.i])
+          incomingSet.add(node.i)
+        }
       }
-    }
+    })
+
+    // 3. Auto-heal missing outgoing edges for non-goal nodes
+    const outgoingSet = new Set(json.e.map(([from]) => from))
+    json.n.forEach((node) => {
+      if (node.i !== goalNode.i && !outgoingSet.has(node.i)) {
+        const nextNode =
+          json.n.find((cand) => (cand.p || 1) > (node.p || 1)) || goalNode
+        if (nextNode && nextNode.i !== node.i) {
+          json.e.push([node.i, nextNode.i])
+          outgoingSet.add(node.i)
+        }
+      }
+    })
   }
 
   const zodValidated = roadmapResponseSchema.parse(json)

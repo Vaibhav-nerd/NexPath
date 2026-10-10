@@ -1,134 +1,87 @@
 import { config } from '../config.js'
 
-// Mock fixture generator for offline dev / unit tests
-function getMockRoadmapResponse(goal, level) {
+/**
+ * Dynamic mock roadmap generator tailored to the requested goal and level.
+ * Ensures that even in offline/demo mode, each query gets personalized results.
+ */
+function getMockRoadmapResponse(goal = 'Software Engineer', level = 'beginner') {
+  const cleanGoal = (goal || 'Software Engineer').trim()
   return JSON.stringify({
-    g: goal || 'Machine Learning Engineer',
-    s: `A backwards-engineered path to becoming an expert in ${goal || 'Machine Learning'}.`,
+    g: cleanGoal,
+    s: `A backwards-engineered path to becoming an expert in ${cleanGoal}.`,
     n: [
       {
         i: 'n1',
-        t: 'Programming fundamentals',
+        t: `${cleanGoal} Foundations`,
         k: 'skill',
         p: 1,
         d: '3w',
-        w: 'Foundational syntax and data structures.',
-        q: ['python programming basics', 'data structures beginners'],
+        w: `Foundational syntax, tools, and basic concepts of ${cleanGoal}.`,
+        q: [`${cleanGoal} basics for beginners`, `${cleanGoal} fundamental tools`],
       },
       {
         i: 'n2',
-        t: 'Mathematics and logic',
+        t: 'Tooling & Environment Setup',
         k: 'skill',
         p: 1,
-        d: '3w',
-        w: 'Linear algebra, calculus, and discrete mathematics.',
-        q: ['linear algebra course', 'applied calculus'],
+        d: '2w',
+        w: `Industry standard environments, toolchains, and developer workflow.`,
+        q: [`best tools for ${cleanGoal}`, `${cleanGoal} setup guide`],
       },
       {
         i: 'n3',
-        t: 'Data structures in practice',
+        t: `Practical Core Techniques`,
         k: 'skill',
         p: 2,
-        d: '2w',
-        w: 'Practical problem solving and algorithms.',
-        q: ['algorithms and data structures', 'leetcode practice'],
+        d: '3w',
+        w: `Applied problem solving and essential domain patterns in ${cleanGoal}.`,
+        q: [`${cleanGoal} practical guide`, `${cleanGoal} core skills`],
       },
       {
         i: 'n4',
-        t: 'Core domain modeling',
-        k: 'skill',
+        t: `${cleanGoal} Hands-on Prototype`,
+        k: 'project',
         p: 2,
         d: '3w',
-        w: 'Standard modeling principles and algorithms.',
-        q: ['statistical modeling', 'scikit learn guide'],
+        w: `Build and ship an end-to-end prototype validating core skills.`,
+        q: [`${cleanGoal} beginner projects`, `build ${cleanGoal} project`],
       },
       {
         i: 'n5',
-        t: 'Hands-on prototype',
-        k: 'project',
-        p: 3,
-        d: '2w',
-        w: 'Working end-to-end prototype validating core theory.',
-        q: ['machine learning project github', 'build model pipeline'],
-      },
-      {
-        i: 'n6',
-        t: 'Deep learning systems',
+        t: `Advanced Specialization`,
         k: 'skill',
         p: 3,
         d: '4w',
-        w: 'Neural network architectures and deep optimization.',
-        q: ['pytorch tutorials', 'deep learning fundamentals'],
+        w: `Complex problem domains, optimization, and industry architectures.`,
+        q: [`advanced ${cleanGoal} techniques`, `${cleanGoal} architecture`],
+      },
+      {
+        i: 'n6',
+        t: `Professional Industry Certification`,
+        k: 'cert',
+        p: 3,
+        d: '2w',
+        w: `Validation of professional capability via recognized industry benchmarks.`,
+        q: [`${cleanGoal} certifications`, `${cleanGoal} credentials`],
       },
       {
         i: 'n7',
-        t: 'Domain specialization',
-        k: 'skill',
-        p: 4,
-        d: '3w',
-        w: 'Advanced techniques in chosen specialization.',
-        q: ['transformers huggingface', 'modern system architecture'],
-      },
-      {
-        i: 'n8',
-        t: 'Specialized capstone',
-        k: 'project',
-        p: 4,
-        d: '2w',
-        w: 'End-to-end production artifact solving real problems.',
-        q: ['capstone ml project', 'deploy model fast api'],
-      },
-      {
-        i: 'n9',
-        t: 'Engineering & MLOps',
-        k: 'skill',
-        p: 5,
-        d: '3w',
-        w: 'Containerization, CI/CD, and model registries.',
-        q: ['docker for engineers', 'mlops architecture'],
-      },
-      {
-        i: 'n10',
-        t: 'Serving & performance',
-        k: 'skill',
-        p: 5,
-        d: '2w',
-        w: 'Low-latency inference engines and scalability.',
-        q: ['model inference optimization', 'triton server'],
-      },
-      {
-        i: 'n11',
-        t: 'Industry certification',
-        k: 'cert',
-        p: 6,
-        d: '3w',
-        w: 'Formal validation of production cloud capabilities.',
-        q: ['cloud architect certification', 'ml engineer exam'],
-      },
-      {
-        i: 'n12',
-        t: goal || 'Target Role',
+        t: `${cleanGoal} Production Showcase`,
         k: 'milestone',
-        p: 7,
-        d: 'Target',
-        w: 'Achieved professional competence ready for industry roles.',
-        q: ['career interview questions', 'system design practice'],
+        p: 4,
+        d: '4w',
+        w: `Public portfolio showcase demonstrating production readiness for employers.`,
+        q: [`${cleanGoal} portfolio showcase`, `${cleanGoal} job preparation`],
       },
     ],
     e: [
+      ['n1', 'n2'],
       ['n1', 'n3'],
       ['n2', 'n4'],
       ['n3', 'n4'],
       ['n4', 'n5'],
-      ['n1', 'n6'],
+      ['n5', 'n6'],
       ['n6', 'n7'],
-      ['n7', 'n8'],
-      ['n5', 'n9'],
-      ['n8', 'n9'],
-      ['n9', 'n10'],
-      ['n10', 'n11'],
-      ['n10', 'n12'],
-      ['n11', 'n12'],
     ],
   })
 }
@@ -137,8 +90,8 @@ function getMockExpandResponse(nodeTitle) {
   return JSON.stringify({
     sub: [
       { t: `${nodeTitle} Foundations`, d: '3d', w: 'Essential principles and setups.' },
-      { t: `${nodeTitle} Implementation`, d: '4d', w: 'Hands-on practical code.' },
-      { t: `${nodeTitle} Advanced Cases`, d: '5d', w: 'Edge cases and optimization.' },
+      { t: `${nodeTitle} Implementation`, d: '4d', w: 'Hands-on practical code and workflow.' },
+      { t: `${nodeTitle} Advanced Cases`, d: '5d', w: 'Edge cases and production optimization.' },
     ],
   })
 }
@@ -148,8 +101,28 @@ function getMockExpandResponse(nodeTitle) {
  */
 function isGeminiProvider() {
   const model = (config.LLM_MODEL || '').toLowerCase()
-  const key = config.ANTHROPIC_API_KEY || ''
-  return model.includes('gemini') || key.startsWith('AQ.') || key.startsWith('AIza')
+  const key = config.GEMINI_API_KEY || config.ANTHROPIC_API_KEY || ''
+  return model.includes('gemini') || key.startsWith('AIza') || key.startsWith('AQ.') || !!config.GEMINI_API_KEY
+}
+
+/**
+ * Normalizes model names to valid provider identifiers.
+ */
+function getNormalizedGeminiModel(rawModel) {
+  const m = (rawModel || '').toLowerCase()
+  if (m.includes('3.5') || m.includes('2.0-flash-lite')) {
+    return 'gemini-2.0-flash'
+  }
+  if (m.includes('1.5-pro')) {
+    return 'gemini-1.5-pro'
+  }
+  if (m.includes('2.0-flash')) {
+    return 'gemini-2.0-flash'
+  }
+  if (m.includes('gemini')) {
+    return rawModel
+  }
+  return 'gemini-1.5-flash'
 }
 
 /**
@@ -173,7 +146,7 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
       mockText = getMockExpandResponse(match ? match[1] : 'Step')
     } else {
       const match = user.match(/Goal:\s*(.+?)(?:\n|$)/)
-      mockText = getMockRoadmapResponse(match ? match[1] : 'Machine Learning Engineer')
+      mockText = getMockRoadmapResponse(match ? match[1] : 'Software Engineer')
     }
 
     const elapsed = Date.now() - startTime
@@ -195,8 +168,9 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
 
     if (isGeminiProvider()) {
       // Google Gemini API
-      const model = config.LLM_MODEL || 'gemini-3.5-flash-lite'
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.ANTHROPIC_API_KEY}`
+      const model = getNormalizedGeminiModel(config.LLM_MODEL)
+      const apiKey = config.GEMINI_API_KEY || config.ANTHROPIC_API_KEY
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -224,13 +198,13 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
       if (!res.ok) {
         const errText = await res.text().catch(() => '')
         console.error(
-          `[LLM Error Gemini] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms`
+          `[LLM Error Gemini] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms body=${errText.slice(0, 200)}`
         )
         if (res.status === 429) {
           throw new Error('Rate limit exceeded with LLM provider. Try again later.')
         }
-        if (res.status === 400 || res.status === 403) {
-          throw new Error('Invalid LLM credentials or configuration.')
+        if (res.status === 400 || res.status === 401 || res.status === 403) {
+          throw new Error('Invalid LLM credentials or configuration. Check your GEMINI_API_KEY.')
         }
         throw new Error(`Upstream LLM error (${res.status})`)
       }
@@ -249,15 +223,17 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
       )
     } else {
       // Anthropic Messages API
+      const apiKey = config.ANTHROPIC_API_KEY
+      const model = (config.LLM_MODEL || '').includes('gemini') ? 'claude-3-haiku-20240307' : (config.LLM_MODEL || 'claude-3-haiku-20240307')
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
-          'x-api-key': config.ANTHROPIC_API_KEY,
+          'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: config.LLM_MODEL,
+          model,
           max_tokens: maxTokens,
           temperature: 0.3,
           system,
@@ -273,7 +249,7 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
         if (res.status === 429) {
           errMsg = 'Rate limit exceeded with LLM provider. Try again later.'
         } else if (res.status === 401 || res.status === 403) {
-          errMsg = 'Invalid LLM credentials configured.'
+          errMsg = 'Invalid LLM credentials configured. Check your ANTHROPIC_API_KEY.'
         }
         console.error(
           `[LLM Error Anthropic] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms`
@@ -291,7 +267,7 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
       }
 
       console.log(
-        `[LLM Call Anthropic] time=${new Date().toISOString()} cached=false duration=${elapsed}ms tokens_in=${usage.input_tokens} tokens_out=${usage.output_tokens} model=${config.LLM_MODEL}`
+        `[LLM Call Anthropic] time=${new Date().toISOString()} cached=false duration=${elapsed}ms tokens_in=${usage.input_tokens} tokens_out=${usage.output_tokens} model=${model}`
       )
     }
 

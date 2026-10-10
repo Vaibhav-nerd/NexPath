@@ -52,6 +52,8 @@ app.get('/api/health', (req, res) => {
     uptime: Math.floor(process.uptime()),
     mongo: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     mockLLM: config.LLM_MOCK,
+    hasApiKey: !!(config.ANTHROPIC_API_KEY || config.GEMINI_API_KEY),
+    model: config.LLM_MODEL,
   })
 })
 
