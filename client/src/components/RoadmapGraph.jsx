@@ -18,6 +18,7 @@ export function RoadmapGraph({
   onPaneClick,
   selectedNodeId,
   completedNodeIds,
+  isLiteMode = false,
 }) {
   const containerRef = useRef(null)
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
@@ -44,8 +45,9 @@ export function RoadmapGraph({
     }
   }, [selectedNodeId, initialNodes, rfInstance])
 
-  // Cursor spotlight updated via requestAnimationFrame directly on DOM style
+  // Cursor spotlight updated via requestAnimationFrame directly on DOM style (disabled in Lite Mode)
   useEffect(() => {
+    if (isLiteMode) return
     const el = containerRef.current
     if (!el) return
 
@@ -114,7 +116,7 @@ export function RoadmapGraph({
 
       return {
         ...edge,
-        className: isConnected ? 'edge-flow' : '',
+        className: isConnected && !isLiteMode ? 'edge-flow' : '',
         style: {
           ...edge.style,
           stroke: strokeColor,
@@ -128,7 +130,7 @@ export function RoadmapGraph({
         },
       }
     })
-  }, [initialEdges, activeNodeId])
+  }, [initialEdges, activeNodeId, isLiteMode])
 
   const handleNodeMouseEnter = useCallback((_, node) => {
     setHoveredNodeId(node.id)
@@ -146,7 +148,11 @@ export function RoadmapGraph({
   )
 
   return (
-    <div ref={containerRef} className="graph-container">
+    <div
+      ref={containerRef}
+      className={`graph-container ${isLiteMode ? 'lite-mode' : ''}`}
+      data-lite={isLiteMode ? 'true' : 'false'}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}

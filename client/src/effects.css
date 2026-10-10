@@ -141,3 +141,92 @@
     opacity: 0;
   }
 }
+
+/* ========================================================================= */
+/* Safeguards (§6)                                                          */
+/* ========================================================================= */
+
+/* Switch: data-fx="off" disables every visual effect */
+[data-fx="off"] .graph-container {
+  background-image: none !important;
+}
+
+[data-fx="off"] .graph-container::before {
+  display: none !important;
+}
+
+[data-fx="off"] .custom-node {
+  will-change: auto !important;
+  transition: none !important;
+}
+
+[data-fx="off"] .custom-node:hover {
+  transform: none !important;
+}
+
+[data-fx="off"] .custom-node::after,
+[data-fx="off"] .custom-node::before {
+  display: none !important;
+}
+
+[data-fx="off"] .side-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: var(--surface) !important;
+  animation: none !important;
+}
+
+[data-fx="off"] .edge-flow path {
+  animation: none !important;
+  stroke-dasharray: none !important;
+}
+
+[data-fx="off"] .anim-enter {
+  animation: none !important;
+}
+
+/* Lite Mode (> 30 nodes): disables spotlight, edge flow, and breathing glow */
+[data-lite="true"] .graph-container,
+.graph-container.lite-mode {
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1px) !important;
+}
+
+[data-lite="true"] .edge-flow path,
+.graph-container.lite-mode .edge-flow path {
+  animation: none !important;
+  stroke-dasharray: none !important;
+}
+
+[data-lite="true"] .custom-node.kind-milestone::after,
+.graph-container.lite-mode .custom-node.kind-milestone::after {
+  animation: none !important;
+  opacity: 0.5 !important;
+}
+
+/* Pause animations when tab is hidden */
+[data-tab-hidden="true"] *,
+[data-tab-hidden="true"] *::before,
+[data-tab-hidden="true"] *::after {
+  animation-play-state: paused !important;
+}
+
+/* Honor prefers-reduced-motion: reduce */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .edge-flow path {
+    animation: none !important;
+    stroke-dasharray: none !important;
+  }
+  .custom-node.kind-milestone::after {
+    animation: none !important;
+  }
+  .custom-node:hover {
+    transform: none !important;
+  }
+}

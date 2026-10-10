@@ -11,6 +11,8 @@ export function QueryBar({
   completedCount,
   totalCount,
   onExportJSON,
+  fxEnabled,
+  onToggleFx,
 }) {
   const [goal, setGoal] = useState('')
   const [level, setLevel] = useState('beginner')
@@ -92,6 +94,14 @@ export function QueryBar({
               aria-label="Download roadmap as JSON"
             >
               Export
+            </button>
+            <button
+              type="button"
+              className="view-toggle-btn"
+              onClick={onToggleFx}
+              aria-label="Toggle visual effects"
+            >
+              FX: {fxEnabled ? 'On' : 'Off'}
             </button>
           </>
         )}

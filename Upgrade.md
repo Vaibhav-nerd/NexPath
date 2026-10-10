@@ -108,7 +108,7 @@ Implement effects 5–8 and 10. Done when: entrance plays once per roadmap, hove
 
 Glass panel with slide-in (effect 9); restyle query bar with focus glow (pseudo-element). Done when: panel animation smooth at 375px, 768px, 1440px; Esc closes it.
 
-6. Safeguards — todo
+6. Safeguards — done
 
 Implement lite mode, document.hidden pause, reduced-motion, and the data-fx="off" switch (§6). Done when: each safeguard is demonstrated (screenshot or recorded note) with a 40-node mock.
 

@@ -26,8 +26,22 @@ export default function App() {
   const [isCached, setIsCached] = useState(false)
   const [lastSubmittedGoal, setLastSubmittedGoal] = useState('')
   const [lastSubmittedLevel, setLastSubmittedLevel] = useState('beginner')
+  const [fxEnabled, setFxEnabled] = useState(true)
 
   const abortControllerRef = useRef(null)
+
+  // Pause all animations when tab is hidden (§6)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        document.documentElement.setAttribute('data-tab-hidden', 'true')
+      } else {
+        document.documentElement.removeAttribute('data-tab-hidden')
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
 
   // Load from sessionStorage or fixture on mount
   useEffect(() => {
@@ -247,7 +261,7 @@ export default function App() {
   const completedSteps = completedNodeIds.size
 
   return (
-    <div className="app-container">
+    <div className="app-container" data-fx={fxEnabled ? 'on' : 'off'}>
       <QueryBar
         onGenerate={handleGenerate}
         isLoading={status === 'loading'}
@@ -257,6 +271,8 @@ export default function App() {
         completedCount={completedSteps}
         totalCount={totalSteps}
         onExportJSON={handleExportJSON}
+        fxEnabled={fxEnabled}
+        onToggleFx={() => setFxEnabled((v) => !v)}
       />
 
       {totalSteps > 0 && (
@@ -338,6 +354,7 @@ export default function App() {
                 onPaneClick={() => setSelectedNodeId(null)}
                 selectedNodeId={selectedNodeId}
                 completedNodeIds={completedNodeIds}
+                isLiteMode={totalSteps > 30}
               />
             ) : (
               <ListView
