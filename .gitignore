@@ -1,7 +1,6 @@
 # Secrets
 .env
 .env.*
-!.env.example
 
 # Dependencies
 node_modules
@@ -69,3 +68,9 @@ tmp
 tmp/
 temp
 temp/
+
+.env.example
+AGENT_BUILD_GUIDE.md
+
+# Documentation files
+*.md

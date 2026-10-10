@@ -44,3 +44,20 @@
     --shadow-panel: 0 8px 24px rgba(22, 32, 46, 0.12);
   }
 }
+
+/* Minimap */
+.react-flow__minimap {
+  width: 200px;
+  height: 140px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__minimap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+

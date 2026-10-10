@@ -174,10 +174,13 @@ export function RoadmapGraph({
           style={{ bottom: 16, left: 16 }}
         />
         <MiniMap
-          nodeStrokeColor="var(--line)"
-          nodeColor="var(--surface)"
-          maskColor="rgba(10, 14, 23, 0.75)"
-          style={{ bottom: 16, left: 72 }}
+          position="bottom-right"
+          style={{ width: 200, height: 140 }}
+          nodeColor="var(--accent)"
+          nodeStrokeWidth={0}
+          maskColor="rgba(10, 14, 23, 0.7)"
+          pannable
+          zoomable
         />
       </ReactFlow>
     </div>
