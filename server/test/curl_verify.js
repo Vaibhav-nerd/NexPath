@@ -1,5 +1,5 @@
 async function runChecks() {
-  console.log('--- Starting Phase 2 Verification Checks ---')
+  console.log('--- Starting Verification Checks ---')
 
   // 1. Health check
   const healthRes = await fetch('http://localhost:5000/api/health')
@@ -24,11 +24,12 @@ async function runChecks() {
   console.log('2b. 250-char goal status (expected 400):', longRes.status)
   if (longRes.status !== 400) throw new Error('Long goal should return 400')
 
-  // 3. Cache test: Same request twice
+  // 3. Cache test: Fresh request then identical repeat request
+  const uniqueGoal = `Cloud Architect ${Date.now()}`
   const req1 = await fetch('http://localhost:5000/api/roadmap', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ goal: 'Cloud Architect', level: 'intermediate' }),
+    body: JSON.stringify({ goal: uniqueGoal, level: 'intermediate' }),
   })
   const data1 = await req1.json()
   console.log('3a. First request cached flag (expected false):', data1.cached)
@@ -37,20 +38,20 @@ async function runChecks() {
   const req2 = await fetch('http://localhost:5000/api/roadmap', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ goal: 'Cloud Architect', level: 'intermediate' }),
+    body: JSON.stringify({ goal: uniqueGoal, level: 'intermediate' }),
   })
   const data2 = await req2.json()
   console.log('3b. Second request cached flag (expected true):', data2.cached)
   if (data2.cached !== true) throw new Error('Second call should be cached')
 
   // 4. Rate limit check: Rapid requests
-  console.log('4. Testing rate limit (5 requests allowed per minute)...')
+  console.log('4. Testing rate limit (5 requests per minute allowed)...')
   let got429 = false
   for (let i = 0; i < 6; i++) {
     const res = await fetch('http://localhost:5000/api/roadmap', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ goal: `Test Goal ${i}`, level: 'beginner' }),
+      body: JSON.stringify({ goal: `Test Goal ${Date.now()} ${i}`, level: 'beginner' }),
     })
     console.log(`   Rapid request #${i + 1} status:`, res.status)
     if (res.status === 429) {
@@ -60,7 +61,7 @@ async function runChecks() {
   }
   if (!got429) throw new Error('Expected 429 on rapid requests exceeding limit')
 
-  console.log('✅ ALL PHASE 2 CHECKS PASSED!')
+  console.log('✅ ALL SERVER VERIFICATION CHECKS PASSED!')
 }
 
 runChecks().catch((err) => {
