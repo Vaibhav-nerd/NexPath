@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -21,7 +21,39 @@ export function RoadmapGraph({
   selectedNodeId,
   completedNodeIds,
 }) {
+  const containerRef = useRef(null)
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
+
+  // Cursor spotlight updated via requestAnimationFrame directly on DOM style
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    let rafId = null
+    let targetX = 0
+    let targetY = 0
+
+    const updateSpotlight = () => {
+      el.style.setProperty('--mx', `${targetX}px`)
+      el.style.setProperty('--my', `${targetY}px`)
+      rafId = null
+    }
+
+    const handleMouseMove = (e) => {
+      const rect = el.getBoundingClientRect()
+      targetX = e.clientX - rect.left
+      targetY = e.clientY - rect.top
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateSpotlight)
+      }
+    }
+
+    el.addEventListener('mousemove', handleMouseMove, { passive: true })
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [])
 
   // Map nodes with dynamic state without altering dagre positions
   const nodes = useMemo(() => {
@@ -91,7 +123,7 @@ export function RoadmapGraph({
   )
 
   return (
-    <div className="graph-container">
+    <div ref={containerRef} className="graph-container">
       <ReactFlow
         nodes={nodes}
         edges={edges}

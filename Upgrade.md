@@ -96,7 +96,7 @@ Create theme.css with §4 tokens; apply to background, surface, text, borders. N
 
 Restyle NodeCard and edges using tokens. Keep kind encoding (solid / left bar / dashed / filled goal) and 200×72 size. Done when: all four kinds are distinguishable without color alone; layout positions unchanged.
 
-3. Lighting layer — todo
+3. Lighting layer — done
 
 Implement effects 1–4 in effects.css plus the rAF spotlight. Done when: 0 React renders on mouse move (verify in React DevTools Profiler), ≥ 55 fps.
 

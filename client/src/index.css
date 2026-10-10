@@ -1,4 +1,5 @@
 @import './theme.css';
+@import './effects.css';
 
 * {
   box-sizing: border-box;
