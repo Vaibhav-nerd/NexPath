@@ -19,7 +19,7 @@ if (!isMock && !apiKey) {
 export const config = {
   ANTHROPIC_API_KEY: apiKey,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-  LLM_MODEL: process.env.LLM_MODEL || 'claude-haiku-5-5',
+  LLM_MODEL: process.env.LLM_MODEL || 'gemini-3.5-flash-lite',
   LLM_MAX_TOKENS: Number.parseInt(process.env.LLM_MAX_TOKENS || '1800', 10),
   LLM_EXPAND_MAX_TOKENS: Number.parseInt(process.env.LLM_EXPAND_MAX_TOKENS || '700', 10),
   LLM_TIMEOUT_MS: Number.parseInt(process.env.LLM_TIMEOUT_MS || '25000', 10),

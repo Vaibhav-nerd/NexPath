@@ -106,26 +106,6 @@ function isGeminiProvider() {
 }
 
 /**
- * Normalizes model names to valid provider identifiers.
- */
-function getNormalizedGeminiModel(rawModel) {
-  const m = (rawModel || '').toLowerCase()
-  if (m.includes('3.5') || m.includes('2.0-flash-lite')) {
-    return 'gemini-2.0-flash'
-  }
-  if (m.includes('1.5-pro')) {
-    return 'gemini-1.5-pro'
-  }
-  if (m.includes('2.0-flash')) {
-    return 'gemini-2.0-flash'
-  }
-  if (m.includes('gemini')) {
-    return rawModel
-  }
-  return 'gemini-1.5-flash'
-}
-
-/**
  * Calls Gemini API or Anthropic Messages API or returns mock.
  *
  * @param {Object} params
@@ -168,7 +148,7 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
 
     if (isGeminiProvider()) {
       // Google Gemini API
-      const model = getNormalizedGeminiModel(config.LLM_MODEL)
+      const model = config.LLM_MODEL || 'gemini-3.5-flash-lite'
       const apiKey = config.GEMINI_API_KEY || config.ANTHROPIC_API_KEY
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
