@@ -88,7 +88,7 @@ Work on a branch (ui-futuristic). One commit per task: feat(ui): <task>.
 Use LLM_MOCK=true for all testing. No real API calls.
 After each task: run the verification in §9, show evidence, update the task to done.
 8. Tasks
-1. Theme tokens — todo
+1. Theme tokens — done
 
 Create theme.css with §4 tokens; apply to background, surface, text, borders. No component logic changes. Done when: app renders in the new theme, contrast verified, graph and panel unchanged in behavior.
 
