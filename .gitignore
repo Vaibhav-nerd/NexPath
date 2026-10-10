@@ -1,0 +1,71 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules
+node_modules/
+client/node_modules
+client/node_modules/
+server/node_modules
+server/node_modules/
+
+# Build output
+dist
+dist/
+build
+build/
+client/dist
+client/dist/
+.vite
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime and coverage
+coverage
+coverage/
+.nyc_output
+.nyc_output/
+*.pid
+*.seed
+
+# Local DB data
+data/db
+data/db/
+*.sqlite
+
+# Caches
+.cache
+.cache/
+.eslintcache
+.parcel-cache
+.parcel-cache/
+.npm
+.npm/
+
+# Editor and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Package manager extras
+.pnpm-store
+.pnpm-store/
+.yarn/*
+!.yarn/releases
+
+# Misc
+*.tgz
+tmp
+tmp/
+temp
+temp/
