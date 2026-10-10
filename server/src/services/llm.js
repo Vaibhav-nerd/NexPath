@@ -144,7 +144,16 @@ function getMockExpandResponse(nodeTitle) {
 }
 
 /**
- * Calls Anthropic Messages API or returns mock in test/dev.
+ * Determines whether the configured provider is Google Gemini or Anthropic Claude.
+ */
+function isGeminiProvider() {
+  const model = (config.LLM_MODEL || '').toLowerCase()
+  const key = config.ANTHROPIC_API_KEY || ''
+  return model.includes('gemini') || key.startsWith('AQ.') || key.startsWith('AIza')
+}
+
+/**
+ * Calls Gemini API or Anthropic Messages API or returns mock.
  *
  * @param {Object} params
  * @param {string} params.system - System prompt
@@ -157,7 +166,7 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
 
   // Mock path for testing or offline development
   if (config.LLM_MOCK) {
-    await new Promise((resolve) => setTimeout(resolve, 50)) // simulate brief latency
+    await new Promise((resolve) => setTimeout(resolve, 50))
     let mockText
     if (system.includes('sub-topics')) {
       const match = user.match(/Step:\s*(.+)/)
@@ -181,51 +190,112 @@ export async function callLLM({ system, user, maxTokens = config.LLM_MAX_TOKENS 
   const timeoutId = setTimeout(() => controller.abort(), config.LLM_TIMEOUT_MS)
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': config.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: config.LLM_MODEL,
-        max_tokens: maxTokens,
-        temperature: 0.3,
-        system,
-        messages: [{ role: 'user', content: user }],
-      }),
-      signal: controller.signal,
-    })
+    let content = ''
+    let usage = { input_tokens: 0, output_tokens: 0 }
 
-    const elapsed = Date.now() - startTime
+    if (isGeminiProvider()) {
+      // Google Gemini API
+      const model = config.LLM_MODEL || 'gemini-3.5-flash-lite'
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.ANTHROPIC_API_KEY}`
 
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => '')
-      let errMsg = `Upstream LLM error (${res.status})`
-      if (res.status === 429) {
-        errMsg = 'Rate limit exceeded with LLM provider. Try again later.'
-      } else if (res.status === 401 || res.status === 403) {
-        errMsg = 'Invalid LLM credentials configured.'
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: system }],
+          },
+          contents: [
+            {
+              parts: [{ text: user }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: maxTokens,
+            responseMimeType: 'application/json',
+          },
+        }),
+        signal: controller.signal,
+      })
+
+      const elapsed = Date.now() - startTime
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '')
+        console.error(
+          `[LLM Error Gemini] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms`
+        )
+        if (res.status === 429) {
+          throw new Error('Rate limit exceeded with LLM provider. Try again later.')
+        }
+        if (res.status === 400 || res.status === 403) {
+          throw new Error('Invalid LLM credentials or configuration.')
+        }
+        throw new Error(`Upstream LLM error (${res.status})`)
       }
-      console.error(
-        `[LLM Error] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms`
+
+      const data = await res.json()
+      content = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+      if (data.usageMetadata) {
+        usage = {
+          input_tokens: data.usageMetadata.promptTokenCount || 0,
+          output_tokens: data.usageMetadata.candidatesTokenCount || 0,
+        }
+      }
+
+      console.log(
+        `[LLM Call Gemini] time=${new Date().toISOString()} cached=false duration=${elapsed}ms tokens_in=${usage.input_tokens} tokens_out=${usage.output_tokens} model=${model}`
       )
-      throw new Error(errMsg)
+    } else {
+      // Anthropic Messages API
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': config.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: config.LLM_MODEL,
+          max_tokens: maxTokens,
+          temperature: 0.3,
+          system,
+          messages: [{ role: 'user', content: user }],
+        }),
+        signal: controller.signal,
+      })
+
+      const elapsed = Date.now() - startTime
+
+      if (!res.ok) {
+        let errMsg = `Upstream LLM error (${res.status})`
+        if (res.status === 429) {
+          errMsg = 'Rate limit exceeded with LLM provider. Try again later.'
+        } else if (res.status === 401 || res.status === 403) {
+          errMsg = 'Invalid LLM credentials configured.'
+        }
+        console.error(
+          `[LLM Error Anthropic] time=${new Date().toISOString()} status=${res.status} duration=${elapsed}ms`
+        )
+        throw new Error(errMsg)
+      }
+
+      const data = await res.json()
+      content = data.content?.[0]?.text || ''
+      if (data.usage) {
+        usage = {
+          input_tokens: data.usage.input_tokens || 0,
+          output_tokens: data.usage.output_tokens || 0,
+        }
+      }
+
+      console.log(
+        `[LLM Call Anthropic] time=${new Date().toISOString()} cached=false duration=${elapsed}ms tokens_in=${usage.input_tokens} tokens_out=${usage.output_tokens} model=${config.LLM_MODEL}`
+      )
     }
 
-    const data = await res.json()
-    const content = data.content?.[0]?.text || ''
-    const usage = data.usage || { input_tokens: 0, output_tokens: 0 }
-
-    console.log(
-      `[LLM Call] time=${new Date().toISOString()} cached=false duration=${elapsed}ms tokens_in=${usage.input_tokens} tokens_out=${usage.output_tokens} model=${config.LLM_MODEL}`
-    )
-
-    return {
-      text: content,
-      tokens: { input: usage.input_tokens, output: usage.output_tokens },
-    }
+    return { text: content, tokens: usage }
   } catch (err) {
     if (err.name === 'AbortError') {
       throw new Error('LLM request timed out. Please try again.')

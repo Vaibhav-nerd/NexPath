@@ -40,11 +40,30 @@ function stripCodeFences(text) {
 }
 
 /**
- * Parses and validates roadmap JSON.
+ * Parses and validates roadmap JSON with sensible milestone phase normalization.
  */
 function parseAndValidateRoadmap(rawText) {
   const cleaned = stripCodeFences(rawText)
   const json = JSON.parse(cleaned)
+
+  // Ensure milestone node exists and is in its own highest phase
+  if (Array.isArray(json.n) && json.n.length > 0) {
+    let milestoneNodes = json.n.filter((node) => node.k === 'milestone')
+    if (milestoneNodes.length === 0) {
+      json.n[json.n.length - 1].k = 'milestone'
+      milestoneNodes = [json.n[json.n.length - 1]]
+    }
+
+    if (milestoneNodes.length === 1) {
+      const milestoneNode = milestoneNodes[0]
+      const otherNodes = json.n.filter((n) => n !== milestoneNode)
+      const maxOtherPhase = Math.max(...otherNodes.map((n) => n.p || 1))
+      if (milestoneNode.p <= maxOtherPhase) {
+        milestoneNode.p = maxOtherPhase + 1
+      }
+    }
+  }
+
   const zodValidated = roadmapResponseSchema.parse(json)
   validateGraph(zodValidated)
   return zodValidated
