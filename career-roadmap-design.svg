@@ -1,0 +1,453 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3400 1200" width="3400" height="1200">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600&amp;display=swap');
+      text {
+        font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+      }
+      .heading-1 { font-size: 28px; font-weight: 600; fill: #16202E; }
+      .heading-2 { font-size: 20px; font-weight: 600; fill: #16202E; }
+      .heading-3 { font-size: 16px; font-weight: 600; fill: #16202E; }
+      .node-title { font-size: 14px; font-weight: 600; fill: #16202E; }
+      .body-text { font-size: 14px; font-weight: 400; fill: #16202E; }
+      .meta-text { font-size: 12px; font-weight: 400; fill: #5B6675; }
+      .meta-bold { font-size: 12px; font-weight: 600; fill: #5B6675; }
+      .link-text { font-size: 14px; font-weight: 400; fill: #2457D6; }
+      .btn-text-white { font-size: 14px; font-weight: 600; fill: #FFFFFF; }
+      .btn-text-dark { font-size: 14px; font-weight: 600; fill: #16202E; }
+    </style>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#D9DEE5" />
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2457D6" />
+    </marker>
+
+    <!-- Side Panel Shadow -->
+    <filter id="panel-shadow" x="-20%" y="-10%" width="140%" height="120%">
+      <feDropShadow dx="-4" dy="0" stdDeviation="12" flood-color="#16202E" flood-opacity="0.12" />
+    </filter>
+
+    <!-- Dot Pattern -->
+    <pattern id="dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#D9DEE5" />
+    </pattern>
+  </defs>
+
+  <!-- BACKGROUND CANVAS -->
+  <rect width="100%" height="100%" fill="#E9ECEF" />
+
+  <!-- ========================================================================= -->
+  <!-- ARTBOARD 1: DESKTOP APPLICATION VIEW (1440 x 900)                         -->
+  <!-- ========================================================================= -->
+  <g id="Artboard-Desktop-View" transform="translate(60, 60)">
+    <!-- Canvas Frame -->
+    <rect width="1440" height="900" rx="16" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="2" />
+    <clipPath id="desktop-clip">
+      <rect width="1440" height="900" rx="16" />
+    </clipPath>
+
+    <g clip-path="url(#desktop-clip)">
+      <!-- Canvas Background Grid -->
+      <rect x="0" y="68" width="1440" height="832" fill="url(#dot-grid)" />
+
+      <!-- TOP QUERY BAR (64px) -->
+      <g id="QueryBar">
+        <rect x="0" y="0" width="1440" height="64" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+
+        <!-- Logo / App Name -->
+        <text x="24" y="38" font-size="16" font-weight="600" fill="#16202E">Career Roadmap</text>
+
+        <!-- Search Input Wrap -->
+        <rect x="180" y="12" width="340" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="196" y="37" class="body-text">Machine Learning Engineer</text>
+
+        <!-- Level Select Dropdown -->
+        <rect x="532" y="12" width="140" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="548" y="37" class="body-text">Beginner</text>
+        <path d="M 648 29 L 654 35 L 660 29" stroke="#5B6675" stroke-width="1.5" fill="none" stroke-linecap="round" />
+
+        <!-- Primary Generate Button -->
+        <rect x="684" y="12" width="160" height="40" rx="8" fill="#2457D6" />
+        <text x="712" y="37" class="btn-text-white">Generate roadmap</text>
+
+        <!-- Status Meta & Tools Right -->
+        <text x="890" y="37" class="meta-text">4 of 12 steps complete</text>
+        
+        <!-- Cached Tag -->
+        <rect x="1035" y="21" width="60" height="22" rx="6" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="1046" y="36" class="meta-text">Cached</text>
+
+        <!-- View Mode Toggle -->
+        <rect x="1110" y="14" width="86" height="36" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="1126" y="36" class="meta-bold">List view</text>
+
+        <!-- Export Button -->
+        <rect x="1208" y="14" width="70" height="36" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="1224" y="36" class="meta-bold">Export</text>
+
+        <!-- 4px Progress Bar Under Query Bar -->
+        <rect x="0" y="64" width="1440" height="4" fill="#D9DEE5" />
+        <rect x="0" y="64" width="480" height="4" fill="#1E8E5A" />
+      </g>
+
+      <!-- GRAPH EDGES (Connecting Nodes) -->
+      <g id="GraphEdges">
+        <!-- n1 -> n3 -->
+        <path d="M 280 206 C 330 206, 330 206, 370 206" fill="none" stroke="#D9DEE5" stroke-width="1.5" marker-end="url(#arrow)" />
+        <!-- n2 -> n4 -->
+        <path d="M 280 346 C 330 346, 330 346, 370 346" fill="none" stroke="#D9DEE5" stroke-width="1.5" marker-end="url(#arrow)" />
+        <!-- n3 -> n4 -->
+        <path d="M 470 242 C 470 280, 410 310, 410 346" fill="none" stroke="#2457D6" stroke-width="2" marker-end="url(#arrow-accent)" />
+        <!-- n4 -> n5 -->
+        <path d="M 570 346 C 610 346, 610 346, 650 346" fill="none" stroke="#2457D6" stroke-width="2" marker-end="url(#arrow-accent)" />
+        <!-- n1 -> n6 -->
+        <path d="M 280 206 C 450 206, 500 486, 650 486" fill="none" stroke="#D9DEE5" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.4" />
+        <!-- n5 -> n9 -->
+        <path d="M 850 346 C 880 346, 880 346, 910 346" fill="none" stroke="#D9DEE5" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.4" />
+      </g>
+
+      <!-- GRAPH NODES -->
+      <g id="GraphNodes">
+        <!-- Phase 1: Node 1 (Skill, Done) -->
+        <g id="Node-n1" transform="translate(80, 170)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+          <text x="14" y="32" class="node-title" fill="#5B6675">Python for data science</text>
+          <!-- Done Icon Check -->
+          <circle cx="178" cy="24" r="8" fill="#1E8E5A" />
+          <path d="M 174 24 L 177 27 L 183 20" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <text x="14" y="56" class="meta-text">3 weeks</text>
+        </g>
+
+        <!-- Phase 1: Node 2 (Skill, Done) -->
+        <g id="Node-n2" transform="translate(80, 310)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+          <text x="14" y="32" class="node-title" fill="#5B6675">Linear algebra &amp; calculus</text>
+          <circle cx="178" cy="24" r="8" fill="#1E8E5A" />
+          <path d="M 174 24 L 177 27 L 183 20" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <text x="14" y="56" class="meta-text">3 weeks</text>
+        </g>
+
+        <!-- Phase 2: Node 3 (Skill, Done) -->
+        <g id="Node-n3" transform="translate(370, 170)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+          <text x="14" y="32" class="node-title" fill="#5B6675">Data wrangling (Pandas)</text>
+          <circle cx="178" cy="24" r="8" fill="#1E8E5A" />
+          <path d="M 174 24 L 177 27 L 183 20" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <text x="14" y="56" class="meta-text">2 weeks</text>
+        </g>
+
+        <!-- Phase 2: Node 4 (Skill, SELECTED) -->
+        <g id="Node-n4" transform="translate(370, 310)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#2457D6" stroke-width="2" />
+          <text x="14" y="32" class="node-title">Classical machine learning</text>
+          <text x="14" y="56" class="meta-text">4 weeks</text>
+        </g>
+
+        <!-- Phase 3: Node 5 (Project, Accent Bar) -->
+        <g id="Node-n5" transform="translate(650, 310)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+          <!-- Accent Left Bar (4px) -->
+          <path d="M 0 10 Q 0 0 10 0 L 10 72 Q 0 72 0 62 Z" fill="#2457D6" />
+          <text x="18" y="32" class="node-title">End-to-end ML pipeline</text>
+          <text x="18" y="56" class="meta-text">2 weeks</text>
+        </g>
+
+        <!-- Phase 3: Node 6 (Skill) -->
+        <g id="Node-n6" transform="translate(650, 450)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+          <text x="14" y="32" class="node-title">Deep learning foundations</text>
+          <text x="14" y="56" class="meta-text">4 weeks</text>
+        </g>
+
+        <!-- Phase 5: Node 9 (Cert, Dashed Border) -->
+        <g id="Node-n9" transform="translate(910, 310)">
+          <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" stroke-dasharray="4,4" />
+          <text x="14" y="32" class="node-title">Cloud ML certification</text>
+          <text x="14" y="56" class="meta-text">3 weeks</text>
+        </g>
+      </g>
+
+      <!-- MINIMAP & ZOOM CONTROLS (Bottom Left) -->
+      <g id="Controls" transform="translate(24, 820)">
+        <rect width="36" height="60" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="13" y="24" font-size="16" fill="#5B6675">+</text>
+        <line x1="4" y1="32" x2="32" y2="32" stroke="#D9DEE5" stroke-width="1" />
+        <text x="14" y="49" font-size="16" fill="#5B6675">−</text>
+      </g>
+
+      <g id="MiniMap" transform="translate(72, 804)">
+        <rect width="120" height="76" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <rect x="8" y="16" width="16" height="8" rx="2" fill="#D9DEE5" />
+        <rect x="8" y="32" width="16" height="8" rx="2" fill="#D9DEE5" />
+        <rect x="36" y="16" width="16" height="8" rx="2" fill="#D9DEE5" />
+        <rect x="36" y="32" width="16" height="8" rx="2" fill="#2457D6" />
+        <rect x="64" y="32" width="16" height="8" rx="2" fill="#D9DEE5" />
+        <!-- Viewport indicator -->
+        <rect x="4" y="6" width="70" height="60" rx="4" fill="none" stroke="#2457D6" stroke-width="1" stroke-dasharray="2,2" />
+      </g>
+
+      <!-- OVERLAY SIDE PANEL (360px on right edge) -->
+      <g id="SidePanel" transform="translate(1080, 68)" filter="url(#panel-shadow)">
+        <rect width="360" height="832" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+
+        <!-- Header -->
+        <text x="24" y="44" class="heading-2">Classical machine learning</text>
+        <!-- Close Button (X) -->
+        <text x="318" y="42" font-size="18" fill="#5B6675" cursor="pointer">✕</text>
+
+        <!-- Section 1: Duration -->
+        <text x="24" y="90" class="meta-bold">Duration</text>
+        <text x="24" y="114" class="body-text">4 weeks</text>
+
+        <!-- Section 2: Why it matters -->
+        <text x="24" y="160" class="meta-bold">Why it matters</text>
+        <text x="24" y="184" class="body-text">Core supervised and unsupervised models form</text>
+        <text x="24" y="204" class="body-text">the baseline of all real-world predictive solutions</text>
+        <text x="24" y="224" class="body-text">using Scikit-Learn.</text>
+
+        <!-- Section 3: Learning Resources Links -->
+        <text x="24" y="270" class="meta-bold">Learning resources</text>
+        <text x="24" y="296" class="link-text">↗ scikit learn machine learning tutorial</text>
+        <text x="24" y="326" class="link-text">↗ statquest machine learning guide</text>
+        <text x="24" y="356" class="link-text">↗ hands on machine learning aurelien geron</text>
+
+        <!-- Bottom Action Buttons -->
+        <g id="PanelActions" transform="translate(24, 690)">
+          <!-- Toggle Complete Button -->
+          <rect width="312" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+          <text x="104" y="25" class="btn-text-dark">Mark complete</text>
+
+          <!-- Go Deeper Button -->
+          <rect y="52" width="312" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+          <text x="120" y="77" class="btn-text-dark">Go deeper</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Artboard Title -->
+    <text x="0" y="-20" class="heading-2">Desktop Canvas (1440 × 900) — Interactive Graph &amp; Side Panel</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ARTBOARD 2: MOBILE VIEW (375 x 812)                                       -->
+  <!-- ========================================================================= -->
+  <g id="Artboard-Mobile-View" transform="translate(1560, 60)">
+    <rect width="375" height="812" rx="16" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="2" />
+    <clipPath id="mobile-clip">
+      <rect width="375" height="812" rx="16" />
+    </clipPath>
+
+    <g clip-path="url(#mobile-clip)">
+      <!-- Mobile Top Bar (64px) -->
+      <rect x="0" y="0" width="375" height="64" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+      <text x="16" y="38" font-size="14" font-weight="600" fill="#16202E">Career Roadmap</text>
+      <rect x="295" y="18" width="64" height="28" rx="6" fill="#2457D6" />
+      <text x="309" y="36" font-size="12" font-weight="600" fill="#FFFFFF">Query</text>
+
+      <!-- Background Canvas Preview -->
+      <rect x="0" y="64" width="375" height="748" fill="url(#dot-grid)" />
+
+      <!-- Nodes in background -->
+      <g transform="translate(87, 120)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="14" y="32" class="node-title">Python for data science</text>
+        <text x="14" y="54" class="meta-text">3 weeks</text>
+      </g>
+      <path d="M 187 192 L 187 230" fill="none" stroke="#D9DEE5" stroke-width="1.5" marker-end="url(#arrow)" />
+      <g transform="translate(87, 230)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#2457D6" stroke-width="2" />
+        <text x="14" y="32" class="node-title">Classical ML</text>
+        <text x="14" y="54" class="meta-text">4 weeks</text>
+      </g>
+
+      <!-- Bottom Sheet Overlay (Max 70vh) -->
+      <g id="Mobile-BottomSheet" transform="translate(0, 360)" filter="url(#panel-shadow)">
+        <rect width="375" height="452" rx="16" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <!-- Grab handle -->
+        <rect x="163" y="10" width="48" height="4" rx="2" fill="#D9DEE5" />
+
+        <text x="20" y="48" class="heading-3">Classical machine learning</text>
+        <text x="335" y="44" font-size="16" fill="#5B6675">✕</text>
+
+        <text x="20" y="80" class="meta-bold">Duration</text>
+        <text x="20" y="102" class="body-text">4 weeks</text>
+
+        <text x="20" y="140" class="meta-bold">Why it matters</text>
+        <text x="20" y="162" class="body-text">Core predictive algorithms and practical</text>
+        <text x="20" y="180" class="body-text">scikit-learn modeling.</text>
+
+        <text x="20" y="218" class="meta-bold">Learning resources</text>
+        <text x="20" y="240" class="link-text">↗ scikit learn tutorial</text>
+        <text x="20" y="266" class="link-text">↗ statquest guide</text>
+
+        <rect x="20" y="310" width="335" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="135" y="335" class="btn-text-dark">Mark complete</text>
+
+        <rect x="20" y="360" width="335" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="145" y="385" class="btn-text-dark">Go deeper</text>
+      </g>
+    </g>
+
+    <text x="0" y="-20" class="heading-2">Mobile View (375 × 812) — Bottom Sheet</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ARTBOARD 3: COMPONENT DESIGN SYSTEM & TOKENS                              -->
+  <!-- ========================================================================= -->
+  <g id="Artboard-Component-System" transform="translate(2000, 60)">
+    <rect width="1340" height="900" rx="16" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="2" />
+
+    <g transform="translate(48, 48)">
+      <text x="0" y="0" class="heading-1">Precision Design System</text>
+      <text x="0" y="24" class="meta-text">4px spacing grid · Public Sans typography · Minimalist tokens</text>
+
+      <!-- COLOR TOKENS PALETTE -->
+      <text x="0" y="70" class="heading-3">Color Tokens</text>
+      
+      <!-- Swatch 1: --bg -->
+      <g transform="translate(0, 90)">
+        <rect width="80" height="60" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="0" y="80" class="meta-bold">--bg</text>
+        <text x="0" y="96" class="meta-text">#F6F7F9</text>
+      </g>
+      <!-- Swatch 2: --surface -->
+      <g transform="translate(100, 90)">
+        <rect width="80" height="60" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="0" y="80" class="meta-bold">--surface</text>
+        <text x="0" y="96" class="meta-text">#FFFFFF</text>
+      </g>
+      <!-- Swatch 3: --ink -->
+      <g transform="translate(200, 90)">
+        <rect width="80" height="60" rx="8" fill="#16202E" />
+        <text x="0" y="80" class="meta-bold">--ink</text>
+        <text x="0" y="96" class="meta-text">#16202E</text>
+      </g>
+      <!-- Swatch 4: --muted -->
+      <g transform="translate(300, 90)">
+        <rect width="80" height="60" rx="8" fill="#5B6675" />
+        <text x="0" y="80" class="meta-bold">--muted</text>
+        <text x="0" y="96" class="meta-text">#5B6675</text>
+      </g>
+      <!-- Swatch 5: --line -->
+      <g transform="translate(400, 90)">
+        <rect width="80" height="60" rx="8" fill="#D9DEE5" />
+        <text x="0" y="80" class="meta-bold">--line</text>
+        <text x="0" y="96" class="meta-text">#D9DEE5</text>
+      </g>
+      <!-- Swatch 6: --accent -->
+      <g transform="translate(500, 90)">
+        <rect width="80" height="60" rx="8" fill="#2457D6" />
+        <text x="0" y="80" class="meta-bold">--accent</text>
+        <text x="0" y="96" class="meta-text">#2457D6</text>
+      </g>
+      <!-- Swatch 7: --done -->
+      <g transform="translate(600, 90)">
+        <rect width="80" height="60" rx="8" fill="#1E8E5A" />
+        <text x="0" y="80" class="meta-bold">--done</text>
+        <text x="0" y="96" class="meta-text">#1E8E5A</text>
+      </g>
+
+      <!-- GRAPH NODE KINDS -->
+      <text x="0" y="240" class="heading-3">Node Kinds (200 × 72px, 10px Radius)</text>
+
+      <!-- Kind 1: Skill -->
+      <g transform="translate(0, 260)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="14" y="32" class="node-title">Skill Node</text>
+        <text x="14" y="56" class="meta-text">Solid 1px border</text>
+        <text x="0" y="96" class="meta-bold">kind: "skill"</text>
+      </g>
+
+      <!-- Kind 2: Project -->
+      <g transform="translate(240, 260)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <path d="M 0 10 Q 0 0 10 0 L 10 72 Q 0 72 0 62 Z" fill="#2457D6" />
+        <text x="18" y="32" class="node-title">Project Node</text>
+        <text x="18" y="56" class="meta-text">4px accent left bar</text>
+        <text x="0" y="96" class="meta-bold">kind: "project"</text>
+      </g>
+
+      <!-- Kind 3: Certification -->
+      <g transform="translate(480, 260)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" stroke-dasharray="4,4" />
+        <text x="14" y="32" class="node-title">Certification Node</text>
+        <text x="14" y="56" class="meta-text">Dashed 1px border</text>
+        <text x="0" y="96" class="meta-bold">kind: "cert"</text>
+      </g>
+
+      <!-- Kind 4: Milestone (Goal) -->
+      <g transform="translate(720, 260)">
+        <rect width="200" height="72" rx="10" fill="#16202E" stroke="#16202E" stroke-width="1" />
+        <text x="14" y="32" class="node-title" fill="#FFFFFF">Milestone (Goal)</text>
+        <text x="14" y="56" class="meta-text" fill="#A0AEC0">Filled --ink surface</text>
+        <text x="0" y="96" class="meta-bold">kind: "milestone"</text>
+      </g>
+
+      <!-- Kind 5: Done State -->
+      <g transform="translate(960, 260)">
+        <rect width="200" height="72" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="14" y="32" class="node-title" fill="#5B6675">Completed Step</text>
+        <circle cx="178" cy="24" r="8" fill="#1E8E5A" />
+        <path d="M 174 24 L 177 27 L 183 20" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        <text x="14" y="56" class="meta-text">Muted text + check icon</text>
+        <text x="0" y="96" class="meta-bold">state: "done"</text>
+      </g>
+
+      <!-- UX STATES -->
+      <text x="0" y="420" class="heading-3">UX States (5 Canonical States)</text>
+
+      <!-- State 1: Empty Suggestions -->
+      <g transform="translate(0, 440)">
+        <rect width="360" height="140" rx="10" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="20" y="32" class="heading-3">Empty State</text>
+        <text x="20" y="56" class="meta-text">Suggestion chips prompt first search:</text>
+        <rect x="20" y="74" width="140" height="28" rx="6" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="30" y="92" class="meta-text">ML Engineer</text>
+        <rect x="170" y="74" width="160" height="28" rx="6" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="180" y="92" class="meta-text">Full Stack Cloud Dev</text>
+      </g>
+
+      <!-- State 2: Skeleton Loading -->
+      <g transform="translate(400, 440)">
+        <rect width="360" height="140" rx="10" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="20" y="32" class="heading-3">Loading State (Skeleton)</text>
+        <text x="20" y="56" class="meta-text">Building your roadmap…</text>
+        <rect x="20" y="74" width="90" height="40" rx="6" fill="#E2E8F0" />
+        <rect x="130" y="74" width="90" height="40" rx="6" fill="#E2E8F0" />
+        <rect x="240" y="74" width="90" height="40" rx="6" fill="#E2E8F0" />
+      </g>
+
+      <!-- State 3: Error & Limit Banners -->
+      <g transform="translate(800, 440)">
+        <rect width="400" height="140" rx="10" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="20" y="32" class="heading-3">Error &amp; Limit Banners</text>
+        <rect x="20" y="48" width="360" height="36" rx="6" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="32" y="71" font-size="12" fill="#16202E">The roadmap could not be read. Try again in a moment.</text>
+        <rect x="20" y="92" width="360" height="36" rx="6" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="32" y="115" font-size="12" fill="#16202E">You've reached today's limit. Try again tomorrow.</text>
+      </g>
+
+      <!-- BUTTONS & CONTROLS -->
+      <text x="0" y="640" class="heading-3">Interactive Controls (8px Radius)</text>
+
+      <g transform="translate(0, 660)">
+        <rect width="160" height="40" rx="8" fill="#2457D6" />
+        <text x="24" y="25" class="btn-text-white">Primary Button</text>
+
+        <rect x="180" width="160" height="40" rx="8" fill="#FFFFFF" stroke="#D9DEE5" stroke-width="1" />
+        <text x="204" y="25" class="btn-text-dark">Secondary Button</text>
+
+        <rect x="360" width="160" height="40" rx="8" fill="#2457D6" opacity="0.5" />
+        <text x="390" y="25" class="btn-text-white">Disabled Button</text>
+
+        <rect x="540" width="220" height="40" rx="8" fill="#F6F7F9" stroke="#D9DEE5" stroke-width="1" />
+        <text x="556" y="25" class="body-text">Input Text Field</text>
+      </g>
+    </g>
+
+    <text x="0" y="-20" class="heading-2">Design System Kit &amp; Token Specifications</text>
+  </g>
+</svg>
