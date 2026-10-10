@@ -8,17 +8,17 @@ const __dirname = path.dirname(__filename)
 // Load .env explicitly from repository root
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
-const isMock = process.env.LLM_MOCK === 'true' || process.env.NODE_ENV === 'test'
+const apiKey = process.env.ANTHROPIC_API_KEY || process.env.GEMINI_API_KEY || ''
+const isMock = process.env.LLM_MOCK === 'true' || process.env.NODE_ENV === 'test' || (!apiKey && !!process.env.VERCEL)
 
 // Fail-fast validation for required secrets in production mode
-if (!isMock) {
-  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.trim() === '') {
-    throw new Error('Missing required environment variable: ANTHROPIC_API_KEY. Set it in .env or run with LLM_MOCK=true.')
-  }
+if (!isMock && !apiKey) {
+  throw new Error('Missing required environment variable: ANTHROPIC_API_KEY or GEMINI_API_KEY. Set it in .env or run with LLM_MOCK=true.')
 }
 
 export const config = {
-  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
+  ANTHROPIC_API_KEY: apiKey,
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
   LLM_MODEL: process.env.LLM_MODEL || 'claude-haiku-5-5',
   LLM_MAX_TOKENS: Number.parseInt(process.env.LLM_MAX_TOKENS || '1800', 10),
   LLM_EXPAND_MAX_TOKENS: Number.parseInt(process.env.LLM_EXPAND_MAX_TOKENS || '700', 10),

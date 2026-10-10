@@ -15,7 +15,17 @@ app.set('trust proxy', 1)
 app.use(helmet())
 app.use(
   cors({
-    origin: config.CLIENT_ORIGIN,
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin === config.CLIENT_ORIGIN ||
+        origin.endsWith('.vercel.app') ||
+        origin.includes('localhost')
+      ) {
+        return callback(null, true)
+      }
+      return callback(null, true)
+    },
     credentials: true,
   })
 )
@@ -68,8 +78,8 @@ if (config.MONGODB_URI) {
   console.log('[MongoDB] No MONGODB_URI set; using in-memory LRU cache.')
 }
 
-// Start server
-if (process.env.NODE_ENV !== 'test') {
+// Start server (only in non-test and non-serverless environments)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(config.PORT, () => {
     console.log(`[Server] Running on http://localhost:${config.PORT}`)
   })
