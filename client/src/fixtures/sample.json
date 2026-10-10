@@ -1,0 +1,129 @@
+{
+  "g": "Machine Learning Engineer",
+  "s": "A reverse-engineered roadmap from core foundations to production ML engineering.",
+  "n": [
+    {
+      "i": "n1",
+      "t": "Python for data science",
+      "k": "skill",
+      "p": 1,
+      "d": "3w",
+      "w": "Core syntax, data structures, and scientific computing packages.",
+      "q": ["python for data analysis", "numpy tutorial beginners"]
+    },
+    {
+      "i": "n2",
+      "t": "Linear algebra and calculus",
+      "k": "skill",
+      "p": 1,
+      "d": "3w",
+      "w": "Matrix math, vectors, and gradients powering optimization algorithms.",
+      "q": ["linear algebra 3blue1brown", "calculus machine learning"]
+    },
+    {
+      "i": "n3",
+      "t": "Data manipulation with Pandas",
+      "k": "skill",
+      "p": 2,
+      "d": "2w",
+      "w": "Wrangling, cleaning, and transforming tabular datasets.",
+      "q": ["pandas tutorial data science", "exploratory data analysis python"]
+    },
+    {
+      "i": "n4",
+      "t": "Classical machine learning",
+      "k": "skill",
+      "p": 2,
+      "d": "4w",
+      "w": "Supervised and unsupervised models using Scikit-Learn.",
+      "q": ["scikit learn machine learning", "statquest machine learning"]
+    },
+    {
+      "i": "n5",
+      "t": "End-to-end ML pipeline",
+      "k": "project",
+      "p": 3,
+      "d": "2w",
+      "w": "Build reproducible training pipeline with data validation and metrics.",
+      "q": ["build machine learning pipeline github", "mlflow tracking tutorial"]
+    },
+    {
+      "i": "n6",
+      "t": "Deep learning fundamentals",
+      "k": "skill",
+      "p": 3,
+      "d": "4w",
+      "w": "Neural network architectures, backprop, and PyTorch essentials.",
+      "q": ["pytorch deep learning course", "neural networks karpathy"]
+    },
+    {
+      "i": "n7",
+      "t": "Computer vision & NLP",
+      "k": "skill",
+      "p": 4,
+      "d": "3w",
+      "w": "CNNs, transformers, and transfer learning for multimodal tasks.",
+      "q": ["huggingface transformers course", "transfer learning computer vision"]
+    },
+    {
+      "i": "n8",
+      "t": "Transformer model project",
+      "k": "project",
+      "p": 4,
+      "d": "2w",
+      "w": "Fine-tune open-weights transformer and evaluate on test benchmark.",
+      "q": ["fine tune llm huggingface", "evaluate bert classification"]
+    },
+    {
+      "i": "n9",
+      "t": "MLOps and containerization",
+      "k": "skill",
+      "p": 5,
+      "d": "3w",
+      "w": "Docker, CI/CD, experiment tracking, and model registries.",
+      "q": ["docker machine learning", "mlops zoomcamp course"]
+    },
+    {
+      "i": "n10",
+      "t": "Model deployment & serving",
+      "k": "skill",
+      "p": 5,
+      "d": "2w",
+      "w": "Deploying REST/gRPC inference APIs with FastAPI and Triton.",
+      "q": ["fastapi machine learning deployment", "model serving best practices"]
+    },
+    {
+      "i": "n11",
+      "t": "Cloud ML Certification",
+      "k": "cert",
+      "p": 6,
+      "d": "3w",
+      "w": "Demonstrate scalable production infrastructure skills.",
+      "q": ["aws certified machine learning specialty", "gcp professional ml engineer"]
+    },
+    {
+      "i": "n12",
+      "t": "Machine Learning Engineer",
+      "k": "milestone",
+      "p": 7,
+      "d": "Target",
+      "w": "Industry-ready professional designing, shipping, and maintaining models in production.",
+      "q": ["machine learning engineer interview prep", "system design machine learning"]
+    }
+  ],
+  "e": [
+    ["n1", "n3"],
+    ["n2", "n4"],
+    ["n3", "n4"],
+    ["n4", "n5"],
+    ["n1", "n6"],
+    ["n6", "n7"],
+    ["n7", "n8"],
+    ["n5", "n9"],
+    ["n8", "n9"],
+    ["n9", "n10"],
+    ["n10", "n11"],
+    ["n10", "n12"],
+    ["n11", "n12"]
+  ]
+}
